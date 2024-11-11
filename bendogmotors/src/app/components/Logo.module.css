@@ -1,19 +1,37 @@
 @import url('https://fonts.googleapis.com/css2?family=Lemon&display=swap');
 
+.logoWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
 .logoContainer {
   display: flex;
-  align-items: center;
-  padding: 0px; 
+  align-items: flex-end;
+  margin-top: 12px;
+  margin-left: 8px;
 }
 
 .logoImage {
-  width: 150px; 
+  width: 100px; 
   height: auto;
 }
 
 .logoText {
   color: #1199E4; 
-  font-size: 36px;
+  font-size: 46px;
   font-family: 'Lemon', sans-serif; 
-  margin-left: 10px; 
+  margin-left: 25px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.separator {
+    width: 65%;
+    height: 12px;
+    background-color: #ff9933;
+
+    margin-left: 8px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
 }

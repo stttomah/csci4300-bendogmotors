@@ -9,3 +9,42 @@
     color:#000000;
   }
   
+  .rating {
+    font-size: 18px; 
+    color: #000000; 
+    margin-bottom: 10px;
+  }
+  
+  .comment {
+    font-size: 18px;
+    font-weight: bold; 
+  }
+  
+  .subcomment {
+    font-size: 14px; 
+    color: #666666; 
+  }
+  
+  .reviewerProfile {
+    display: flex;
+    align-items: center;
+    margin-top: 5px;
+  }
+
+  .reviewerImage {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+
+  .name {
+    font-weight: bold;
+    color:#464646;
+    margin-top: 10px;
+  }
+  
+  .date {
+    color: #999999;
+    font-size: 14px;
+  }
