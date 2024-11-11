@@ -4,4 +4,14 @@
     gap: 20px; 
     justify-content: space-between;
   }
+
+  .reviewsHeading {
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+    text-align: center;
+    font-size: 38px;
+    font-weight: bold;
+    color: #ff9933;
+    width: 100%;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+  }
   

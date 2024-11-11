@@ -5,6 +5,7 @@ const LoginForm = () => (
   <div className={styles.loginContainer}>
     <div className={styles.loginBox}>
       <h2 className={styles.heading}>LOGIN</h2>
+      <hr className={styles.separator}/>
       <form>
         <label htmlFor="username" className={styles.label}>Username</label>
         <input type="text" id="username" placeholder="Enter Username" className={styles.input} />
