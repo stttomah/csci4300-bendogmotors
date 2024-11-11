@@ -1,0 +1,42 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #24B1FF;
+    font-weight: bold;
+    color: #333;
+    padding: 10px 20px;
+}
+  
+.logoContainer {
+    display: flex;
+    align-items: center;
+}
+  
+.logo {
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+}
+  
+.searchBar {
+    padding: 5px 10px;
+    border-radius: 20px;
+    border: none;
+    width: 325px;
+}
+  
+.logoutButton {
+    border: none;
+    background: none;
+    color: white;
+    cursor: pointer;
+}
+  
+.header nav a {
+    margin: 0 10px;
+    text-decoration: none;
+    color: white;
+}
+  

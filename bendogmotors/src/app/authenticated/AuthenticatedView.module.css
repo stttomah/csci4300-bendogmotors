@@ -1,0 +1,27 @@
+.container {
+  font-family: Arial, sans-serif;
+  color: #333;
+  background-color: white;
+}
+
+.content {
+  display: flex;
+  margin-top: 20px;
+  align-items: flex-start;
+}
+
+.mainLogo {
+  display: block;
+  margin-left: 50px;
+  width: 70%;
+  height: auto;
+  grid-column: 1 / -1;
+}
+
+.listingsSection {
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: 20px;
+}
+
+
