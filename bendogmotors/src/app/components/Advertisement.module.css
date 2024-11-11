@@ -1,0 +1,12 @@
+.adContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }
+  
+  .adImage {
+    max-width: 100%;
+    height: auto;
+  }
+  
