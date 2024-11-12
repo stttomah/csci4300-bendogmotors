@@ -1,0 +1,76 @@
+.card {
+    width: 350px;
+    border: 1px solid #ddd;
+    background-color: white;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin: 5px;
+    padding-bottom: 50px;
+}
+
+.sellerInfo {
+    display: flex;
+    align-items: center;
+    font-size: 12px; 
+    color: #555;
+    margin-top: 5px;
+    margin-bottom: 8px;
+    padding-top: 10px;
+    padding-left: 10px;
+}
+
+.profileImage {
+    border-radius: 50%;
+    width: 35px; 
+    height: 35px;
+    margin-right: 8px;
+}
+
+.sellerInfo p {
+    font-weight: bold;
+}
+
+.carImage {
+    width: 100%;
+    height: auto;
+}
+
+.carDetails {
+    margin-left: 8px;
+}
+
+.carTitle {
+    padding-bottom: 20px;
+    font-size: 16px;
+    font-weight: bold;
+    margin: 4px 0;
+}
+
+.priceSection {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    text-align: right;
+}
+
+.price {
+    font-size: 20px;
+    color: green;
+    font-weight: bold;
+}
+
+.buyButton {
+    background-color: #24B1FF;
+    color: white;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 20px;
+    cursor: pointer;
+    margin-top: 5px;
+}
+
+
+

@@ -2,11 +2,11 @@
 
 import React from 'react';
 import styles from './AuthenticatedView.module.css';
-import Header from './components/Header';
-import Sidebar from './components/Sidebar';
-import Listing from './components/Listing';
-import Footer from './components/Footer';
-import PageNavigation from './components/PageNavigation';
+import Header from './auth-components/Header';
+import Sidebar from './auth-components/Sidebar';
+import Listing from './auth-components/Listing';
+import Footer from './auth-components/Footer';
+import PageNavigation from './auth-components/PageNavigation';
 
 const listings = [
   {
