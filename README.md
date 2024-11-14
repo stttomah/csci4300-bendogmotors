@@ -9,3 +9,17 @@ Key features for authenticated users include:
 - Automobile Listings: Search and browse detailed listings complete with descriptions, pricing, and specifications.
 - Purchase Vehicles: Securely buy cars through the platform.
 - Sell Vehicles: Create new listings by entering detailed automobile information, specifications, and pricing.
+
+## How to Run Application
+Required to Run: 
+- Next.js
+- MongoDB Atlas
+
+Steps to Run:
+- download and open application ZIP file
+- open application file in IDE of choice
+- cd into bendogmotors directory
+- run npm install in terminal
+- run npm run dev in terminal
+- load localhost:3000 in broswer of choice
+  
