@@ -1,5 +1,5 @@
 .sidebar {
-    width: 50%;
+    width: 40%;
     background-color: #e5e5e5;
     border-radius: 8px;
 }
@@ -7,7 +7,7 @@
 .filters select {
     display: block;
     width: 100%;
-    padding: 30px 40px; 
+    padding: 30px 20px; 
     border: 1px solid #ddd;
     border-radius: 4px;
     font-size: 16px;
