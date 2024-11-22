@@ -7,6 +7,7 @@ import Sidebar from './auth-components/Sidebar';
 import Listing from './auth-components/Listing';
 import Footer from './auth-components/Footer';
 import PageNavigation from './auth-components/PageNavigation';
+import { signOut } from 'next-auth/react';
 
 const listings = [
   {
@@ -48,9 +49,20 @@ const listings = [
 ];
 
 const AuthenticatedView: React.FC = () => {
-  const handleLogout = () => {
-    console.log('User logged out');
-  };
+  const handleLogout = async () => {
+    try {
+      // log out from NextAuth
+      await signOut({
+        redirect: false,
+      });
+  
+      // redirect to Google logout page
+      window.location.href =
+        'https://accounts.google.com/Logout?continue=https://appengine.google.com/_ah/logout?continue=http://localhost:3000';
+    } catch (error) {
+      console.error('Error during logout:', error);
+    }
+  };  
 
   return (
     <div className={styles.container}>
@@ -66,7 +78,7 @@ const AuthenticatedView: React.FC = () => {
           ))}
         </main>
       </div>
-      <PageNavigation/>
+      <PageNavigation />
       <Footer />
     </div>
   );
