@@ -19,10 +19,7 @@ Steps to Run:
 - download and open application ZIP file
 - open application file in IDE of choice
 - cd into bendogmotors directory
-- run "npm install" in terminal
-- run "npm install next-auth@beta" in terminal
-- run "npx auth secret" in terminal
-- run "npm i bcryptjs" in terminal
-- run "npm run dev" in terminal
+- run npm install in terminal
+- run npm run dev in terminal
 - load localhost:3000 in broswer of choice
   
