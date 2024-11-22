@@ -12,13 +12,13 @@ const LoginForm = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoggedIn(true);
-    router.push('/authenticated'); 
+    router.push('/authenticated');
     console.log('User is logged in');
   };
 
   const handleGoogleSignIn = async () => {
     try {
-      await signIn('google');
+      await signIn('google', { callbackUrl: '/authenticated' });
     } catch (error) {
       console.error('Google Sign-In failed:', error);
     }
@@ -56,10 +56,10 @@ const LoginForm = () => {
         {/* Google Login */}
         <button
           type="button"
-          className={`${styles.button} ${styles.googleButton}`}
           onClick={handleGoogleSignIn}
+          className={`${styles.button} ${styles.googleButton}`}
         >
-          Sign in with Google
+          <span>Google Sign In</span>
         </button>
       </div>
     </div>
