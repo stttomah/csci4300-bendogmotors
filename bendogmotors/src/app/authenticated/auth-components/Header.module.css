@@ -39,4 +39,9 @@
     text-decoration: none;
     color: white;
 }
+
+.backToHomepage {
+    color: #ffffff;
+    cursor: pointer;
+  } 
   
