@@ -24,6 +24,10 @@ const LoginForm = () => {
     }
   };
 
+  const handleSignUpRedirect = () => {
+    router.push('/create-account'); 
+  };
+
   return (
     <div className={styles.loginContainer}>
       <div className={styles.loginBox}>
@@ -51,7 +55,9 @@ const LoginForm = () => {
           <button type="submit" className={styles.button}>Sign In</button>
         </form>
 
-        <p className={styles.signupLink}>Don’t have an account?</p>
+        <p className={styles.signupLink} onClick={handleSignUpRedirect}>
+          Don't have an account?
+        </p>
 
         {/* Google Login */}
         <button
