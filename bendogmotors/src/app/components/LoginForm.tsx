@@ -17,15 +17,14 @@ const LoginForm = () => {
     e.preventDefault();
     setErrorMessage('');
     setIsLoading(true);
-
+  
     try {
       const response = await fetch(`/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        credentials: 'same-origin', // Adjust if your cookies are configured differently
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password }), // Send JSON body
       });
-
+  
       if (response.ok) {
         const data = await response.json();
         console.log('Login successful:', data);
@@ -40,7 +39,7 @@ const LoginForm = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  };  
 
   const handleGoogleSignIn = async () => {
     try {

@@ -16,7 +16,8 @@ export async function POST(request: NextRequest) {
 
     await connectMongoDB();
 
-    const existingUser = await User.findOne({ email });
+    // Check if the user already exists
+    const existingUser = await User.findOne({ email: email.toLowerCase() });
     if (existingUser) {
       return NextResponse.json(
         { message: "User already exists" },
@@ -24,21 +25,26 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    // Hash the password (using synchronous technique)
+    const saltRounds = 10;
+    const salt = bcrypt.genSaltSync(saltRounds);
+    const hashedPassword = bcrypt.hashSync(password, salt);
+
+    // Create and store the new user
     const newUser = await User.create({
       name,
-      email,
-      password: hashedPassword,
+      email: email.toLowerCase(), // Normalize email
+      password: hashedPassword,   // Store hashed password
     });
 
     return NextResponse.json(
-      { message: "User registered successfully", user: newUser },
+      { message: "User registered successfully", user: { email: newUser.email, name: newUser.name } },
       { status: 201 }
     );
   } catch (error) {
-    console.error("Error registering user:", error);
+    console.error("Error during registration:", error);
     return NextResponse.json(
-      { message: "Error registering user" },
+      { message: "An error occurred during registration" },
       { status: 500 }
     );
   }
