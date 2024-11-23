@@ -3,7 +3,7 @@ import connectMongoDB from "@/libs/mongodb";
 import User from "@/models/userSchema";
 import bcrypt from "bcrypt";
 
-// Handle user registration
+// User Registration
 export async function POST(request: NextRequest) {
   try {
     const { name, email, password } = await request.json();
@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
 
     await connectMongoDB();
 
-    // Check if the user already exists
+    // Check is user exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return NextResponse.json(
@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Hash the password before saving
+    // Hash password before saving
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = await User.create({
       name,
@@ -41,7 +41,6 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error("Error registering user:", error);
 
-    // Properly handle unknown type for `error`
     if (error instanceof Error) {
       return NextResponse.json(
         { message: "Error registering user", error: error.message },
@@ -56,7 +55,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// Handle user login
+// User Login
 export async function GET(request: NextRequest) {
     try {
       const url = new URL(request.url);
@@ -83,7 +82,7 @@ export async function GET(request: NextRequest) {
       console.log("Plaintext Password:", password);
       console.log("Hashed Password from DB:", user.password);
   
-      // Compare the plaintext password with the hashed password
+      // Compare regular password with hashed
       const isPasswordValid = await bcrypt.compare(password, user.password);
       if (!isPasswordValid) {
         return NextResponse.json(

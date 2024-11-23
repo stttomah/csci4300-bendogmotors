@@ -7,7 +7,7 @@ interface RouteParams {
     params: { id: string };
 }
 
-// Fetch a user by ID
+// Find user by id
 export async function GET(request: NextRequest, { params }: RouteParams) {
   const { id } = params;
 
@@ -31,7 +31,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
   }
 }
 
-// Create a new user
+// Create new user
 export async function POST(request: NextRequest) {
   try {
     const { name, email, image, role } = await request.json();
@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// Update a user by ID
+// Update user by id
 export async function PUT(request: NextRequest, { params }: RouteParams) {
   const { id } = params;
 
@@ -65,7 +65,6 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
 
     await connectMongoDB();
 
-    // Convert `id` to ObjectId
     const updatedUser = await User.findByIdAndUpdate(
       new mongoose.Types.ObjectId(id),
       { name, email, image, role },
@@ -86,14 +85,13 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
   }
 }
 
-// Delete a user by ID
+// Delete user by id
 export async function DELETE(request: NextRequest, { params }: RouteParams) {
   const { id } = params;
 
   try {
     await connectMongoDB();
 
-    // Convert `id` to ObjectId
     const deletedUser = await User.findByIdAndDelete(new mongoose.Types.ObjectId(id));
     if (!deletedUser) {
       return NextResponse.json({ message: "User not found" }, { status: 404 });
