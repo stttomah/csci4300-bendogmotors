@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from './LoginForm.module.css';
 import { signIn } from 'next-auth/react';
+import '@fortawesome/fontawesome-free/css/all.css';
 
 const LoginForm = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -30,6 +31,18 @@ const LoginForm = () => {
         <h2 className={styles.heading}>LOGIN</h2>
         <hr className={styles.separator} />
 
+        {/* Google Login */}
+        <button
+          type="button"
+          onClick={handleGoogleSignIn}
+          className={`${styles.googleButton}`}
+        >
+          <div className={styles.googleLogo}>
+            <img src="/images/google-icon.svg" alt="Google Logo" className={styles.logoImage} />
+          </div>
+          <span>Sign in with Google</span>
+        </button>
+
         {/* Regular Login */}
         <form onSubmit={handleSubmit}>
           <label htmlFor="username" className={styles.label}>Username</label>
@@ -52,15 +65,6 @@ const LoginForm = () => {
         </form>
 
         <p className={styles.signupLink}>Don’t have an account?</p>
-
-        {/* Google Login */}
-        <button
-          type="button"
-          onClick={handleGoogleSignIn}
-          className={`${styles.button} ${styles.googleButton}`}
-        >
-          <span>Google Sign In</span>
-        </button>
       </div>
     </div>
   );

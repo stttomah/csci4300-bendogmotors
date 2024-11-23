@@ -51,18 +51,14 @@ const listings = [
 const AuthenticatedView: React.FC = () => {
   const handleLogout = async () => {
     try {
-      // log out from NextAuth
       await signOut({
-        redirect: false,
+        redirect: true,
+        callbackUrl: '/',
       });
-  
-      // redirect to Google logout page
-      window.location.href =
-        'https://accounts.google.com/Logout?continue=https://appengine.google.com/_ah/logout?continue=http://localhost:3000';
     } catch (error) {
       console.error('Error during logout:', error);
     }
-  };  
+  };
 
   return (
     <div className={styles.container}>
