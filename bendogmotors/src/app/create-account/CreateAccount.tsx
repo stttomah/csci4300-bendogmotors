@@ -1,16 +1,8 @@
-"use client";
+'use client';
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from './CreateAccount.module.css';
-
-interface Account {
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-}
 
 const CreateAccount: React.FC = () => {
   const router = useRouter();
@@ -36,35 +28,29 @@ const CreateAccount: React.FC = () => {
       return;
     }
 
-    const newAccount: Account = {
-      firstName,
-      lastName,
-      email,
-      password,
-      confirmPassword,
-    };
-
-    console.log("Submitting Data:", newAccount);
-
     try {
-      const response = await fetch('/api/accounts', {
+      const response = await fetch('/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newAccount),
+        body: JSON.stringify({
+          name: `${firstName} ${lastName}`, // Combine first and last name
+          email,
+          password,
+        }),
       });
 
       if (response.ok) {
         const result = await response.json();
-        console.log("Response Message:", result.message);
+        console.log('Account creation successful:', result.message);
         clearForm();
-        router.push('/authenticated');
+        router.push('/authenticated'); // Redirect on success
       } else {
         const errorData = await response.json();
         setError(errorData.message || 'Failed to create account.');
-        console.error("Failed to create account:", errorData);
+        console.error('Failed to create account:', errorData);
       }
     } catch (error) {
-      console.error("Error creating account:", error);
+      console.error('Error creating account:', error);
       setError('An unexpected error occurred. Please try again.');
     }
   };
@@ -88,22 +74,51 @@ const CreateAccount: React.FC = () => {
         {error && <p className={styles.error}>{error}</p>}
 
         <label>First Name</label>
-        <input type="text" value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder="Enter First Name" />
+        <input
+          type="text"
+          value={firstName}
+          onChange={(e) => setFirstName(e.target.value)}
+          placeholder="Enter First Name"
+        />
 
         <label>Last Name</label>
-        <input type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} placeholder="Enter Last Name" />
+        <input
+          type="text"
+          value={lastName}
+          onChange={(e) => setLastName(e.target.value)}
+          placeholder="Enter Last Name"
+        />
 
         <label>Email</label>
-        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Enter Email" />
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Enter Email"
+        />
 
         <label>Password</label>
-        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Enter Password" />
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Enter Password"
+        />
 
         <label>Confirm Password</label>
-        <input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} placeholder="Confirm Password" />
+        <input
+          type="password"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          placeholder="Confirm Password"
+        />
 
         <div className={styles.buttons}>
-          <button type="button" onClick={() => router.push('/authenticated')} className={styles.cancelButton}>
+          <button
+            type="button"
+            onClick={() => router.push('/')}
+            className={styles.cancelButton}
+          >
             Cancel
           </button>
           <button type="submit" className={styles.postButton}>

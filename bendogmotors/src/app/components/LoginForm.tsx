@@ -7,14 +7,39 @@ import { signIn } from 'next-auth/react';
 import '@fortawesome/fontawesome-free/css/all.css';
 
 const LoginForm = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsLoggedIn(true);
-    router.push('/authenticated');
-    console.log('User is logged in');
+    setErrorMessage('');
+    setIsLoading(true);
+
+    try {
+      const response = await fetch(`/api/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'same-origin', // Adjust if your cookies are configured differently
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log('Login successful:', data);
+        router.push('/authenticated'); // Redirect after successful login
+      } else {
+        const errorData = await response.json();
+        setErrorMessage(errorData.message || 'Login failed');
+      }
+    } catch (error) {
+      console.error('Error logging in:', error);
+      setErrorMessage('An unexpected error occurred');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleGoogleSignIn = async () => {
@@ -26,7 +51,7 @@ const LoginForm = () => {
   };
 
   const handleSignUpRedirect = () => {
-    router.push('/create-account'); 
+    router.push('/create-account');
   };
 
   return (
@@ -49,23 +74,33 @@ const LoginForm = () => {
 
         {/* Regular Login */}
         <form onSubmit={handleSubmit}>
-          <label htmlFor="username" className={styles.label}>Username</label>
+          {errorMessage && <p className={styles.error}>{errorMessage}</p>}
+
+          <label htmlFor="email" className={styles.label}>Email</label>
           <input
-            type="text"
-            id="username"
-            placeholder="Enter Username"
+            type="email"
+            id="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Enter Email"
             className={styles.input}
+            required
           />
 
           <label htmlFor="password" className={styles.label}>Password</label>
           <input
             type="password"
             id="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             placeholder="Enter Password"
             className={styles.input}
+            required
           />
 
-          <button type="submit" className={styles.button}>Sign In</button>
+          <button type="submit" className={styles.button} disabled={isLoading}>
+            {isLoading ? 'Signing In...' : 'Sign In'}
+          </button>
         </form>
         <p className={styles.signupLink} onClick={handleSignUpRedirect}>
           Don't have an account?
