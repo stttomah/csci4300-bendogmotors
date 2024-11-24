@@ -152,7 +152,6 @@ const CreateListing: React.FC = () => {
           placeholder="Enter MPG"
         />
 
-        {/* New fields */}
         <label>Mileage</label>
         <input
           type="number"

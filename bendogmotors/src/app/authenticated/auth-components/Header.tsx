@@ -7,7 +7,7 @@ import styles from './Header.module.css';
 
 interface HeaderProps {
   onLogout: () => void;
-  onSearch: (query: string) => void; // Pass search query to parent
+  onSearch?: (query: string) => void; // Pass search query to parent
 }
 
 const Header: React.FC<HeaderProps> = ({ onLogout, onSearch }) => {
@@ -25,7 +25,9 @@ const Header: React.FC<HeaderProps> = ({ onLogout, onSearch }) => {
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const query = e.target.value;
     setSearchQuery(query);
+    if (onSearch) {
     onSearch(query); // Update search query in the parent component
+  }
   };
 
   const handleBackToHomepage = () => {
@@ -49,7 +51,7 @@ const Header: React.FC<HeaderProps> = ({ onLogout, onSearch }) => {
               type="text"
               value={searchQuery}
               onChange={handleSearchChange}
-              placeholder="Search Cars"
+              placeholder="Search Listings"
               className={styles.searchInput}
             />
             <button type="submit" className={styles.searchButton}>
