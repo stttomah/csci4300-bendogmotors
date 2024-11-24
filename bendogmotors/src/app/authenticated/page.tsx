@@ -23,23 +23,24 @@ interface Listing {
 
 const AuthenticatedView: React.FC = () => {
   const [listings, setListings] = useState<Listing[]>([]);
+  const [filteredListings, setFilteredListings] = useState<Listing[]>([]); // Filtered Listings
+  const [searchQuery, setSearchQuery] = useState(""); // Search Query
 
+  // Fetch Listings
   useEffect(() => {
     const fetchListings = async () => {
       try {
         const response = await fetch("/api/items");
         const data = await response.json();
-  
+
         console.log("Fetched Data:", data);
-  
-        // Ensure data.items exists and is an array
+
         if (!Array.isArray(data.items)) {
           console.error("Unexpected data format or empty response:", data);
           setListings([]);
           return;
         }
-  
-        // Transform data to match the Listing interface
+
         const transformedListings = data.items.map((item: any) => ({
           id: item._id,
           title: item.title,
@@ -52,24 +53,40 @@ const AuthenticatedView: React.FC = () => {
           imageUrl: item.image,
           profileImageUrl: item.profileImageUrl || "/images/dianestephens.png",
         }));
-  
+
         setListings(transformedListings);
+        setFilteredListings(transformedListings); // Initially show all listings
       } catch (error) {
         console.error("Error fetching listings:", error);
-        setListings([]); 
+        setListings([]);
       }
     };
-  
+
     fetchListings();
-  }, []);  
+  }, []);
+
+  // Update Filtered Listings Based on Search Query
+  useEffect(() => {
+    if (searchQuery.trim() === "") {
+      setFilteredListings(listings); // Show all listings if the search query is empty
+    } else {
+      const filtered = listings.filter((listing) =>
+        listing.title.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      setFilteredListings(filtered);
+    }
+  }, [searchQuery, listings]);
 
   return (
     <div className={styles.container}>
-      <Header onLogout={() => console.log("Logged out")} />
+      <Header
+        onLogout={() => console.log("Logged out")}
+        onSearch={(query) => setSearchQuery(query)} // Pass search query to the header
+      />
       <div className={styles.content}>
         <Sidebar />
         <main className={styles.listingsSection}>
-          {listings.map((listing: Listing) => (
+          {filteredListings.map((listing: Listing) => (
             <Listing key={listing.id} listing={listing} />
           ))}
         </main>
