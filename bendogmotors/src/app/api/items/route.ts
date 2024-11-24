@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
         interiorColor,
         exteriorColor,
         features,
-        linkurl, // Use linkurl from payload
+        linkurl, 
       } = data;
   
       const newItem = await Item.create({
@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
         interiorColor,
         exteriorColor,
         features,
-        image: linkurl, // Map linkurl to image
+        image: linkurl, 
       });
   
       console.log("Saved Item:", newItem);
@@ -48,7 +48,7 @@ export async function POST(request: NextRequest) {
       console.error("Error saving item:", error);
   
       const errorMessage =
-        error instanceof Error ? error.message : "An unknown error occurred";
+        error instanceof Error ? error.message : "An error occurred";
   
       return NextResponse.json(
         { message: "Failed to save item", error: errorMessage },
@@ -68,9 +68,8 @@ export async function GET() {
   } catch (error) {
     console.error("Error fetching items:", error);
 
-    // Safely cast error to Error type or return fallback message
     const errorMessage =
-      error instanceof Error ? error.message : "An unknown error occurred";
+      error instanceof Error ? error.message : "An error occurred";
 
     return NextResponse.json(
       { message: "Failed to fetch items", error: errorMessage },
