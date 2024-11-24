@@ -7,7 +7,6 @@ export async function POST(request: NextRequest) {
   try {
     const { email, password } = await request.json();
 
-    // Validate input
     if (!email || !password) {
       return NextResponse.json(
         { message: "Email and password are required" },
@@ -17,17 +16,22 @@ export async function POST(request: NextRequest) {
 
     await connectMongoDB();
 
-    // Find user by email
+    // Find the user by email
     const user = await User.findOne({ email: email.toLowerCase() });
-    if (!user || !user.password) {
+
+    if (!user) {
       return NextResponse.json(
         { message: "Invalid email or password" },
         { status: 401 }
       );
     }
 
-    // Check password using bcrypt
+    // Compare the provided password with the hashed password (using synchronous technique)
     const isPasswordValid = await bcrypt.compare(password, user.password);
+    console.log("Provided Password:", password);
+    console.log("Stored Hashed Password:", user.password);
+    console.log("Password Match:", isPasswordValid);
+
     if (!isPasswordValid) {
       return NextResponse.json(
         { message: "Invalid email or password" },
@@ -35,7 +39,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Respond with user data or a success message
     return NextResponse.json(
       { message: "Login successful", user: { email: user.email, name: user.name } },
       { status: 200 }
