@@ -18,10 +18,15 @@ export async function POST(request: NextRequest) {
         year,
         fuel,
         mpg,
+        mileage,
+        horsepower,
+        engine,
         interiorColor,
         exteriorColor,
         features,
         linkurl, 
+        sellerName,
+        sellerJoinDate,
       } = data;
   
       const newItem = await Item.create({
@@ -32,10 +37,15 @@ export async function POST(request: NextRequest) {
         year,
         fuel,
         mpg,
+        mileage,
+        horsepower,
+        engine,
         interiorColor,
         exteriorColor,
         features,
         image: linkurl, 
+        sellerName,
+        sellerJoinDate,
       });
   
       console.log("Saved Item:", newItem);
