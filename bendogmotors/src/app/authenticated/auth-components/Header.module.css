@@ -4,39 +4,91 @@
     align-items: center;
     background-color: #24B1FF;
     font-weight: bold;
-    color: #333;
+    color: #ffffff;
     padding: 10px 20px;
 }
-  
+
+.leftContainer {
+    display: flex;
+    align-items: center;
+    gap: 20px; /* Space between logo and search bar */
+}
+
 .logoContainer {
     display: flex;
     align-items: center;
+    cursor: pointer;
 }
-  
+
 .logo {
     border-radius: 50%;
     width: 40px;
     height: 40px;
-    margin-right: 10px;
 }
-  
-.searchBar {
+
+.searchForm {
+    display: flex;
+    align-items: center;
+    background-color: #e9e4f0; 
+    border-radius: 25px;
     padding: 5px 10px;
-    border-radius: 20px;
+    width: 400px; /* Search bar width */
+}  
+
+.searchInput {
+    flex-grow: 1;
     border: none;
-    width: 325px;
+    outline: none;
+    background: none;
+    padding: 10px;
+    font-size: 16px;
+    color: #333;
+    border-radius: 25px 0 0 25px;
 }
-  
+
+.searchButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #333;
+    padding: 0 10px;
+}
+
+.searchButton i {
+    font-size: 18px;
+}
+
+.nav {
+    display: flex;
+    gap: 5px; /* Adds spacing between the links */
+}
+
+.nav a {
+    text-decoration: none;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    transition: color 0.3s ease;
+    padding: 5px 10px; /* Adds padding for better click area */
+}
+
+.nav a:hover {
+    color: #ddd; /* Change color on hover */
+}
+
+
 .logoutButton {
     border: none;
     background: none;
     color: white;
     cursor: pointer;
+    font-size: 16px;
 }
-  
-.header nav a {
-    margin: 0 10px;
-    text-decoration: none;
-    color: white;
+
+.backToHomepage {
+    color: #ffffff;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    text-decoration: underline;
 }
-  

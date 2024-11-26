@@ -1,0 +1,40 @@
+.container {
+    font-family: Arial, sans-serif;
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .heading {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #333;
+  }
+  
+  .list {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .carItem {
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  
+  .carItem p {
+    margin: 5px 0;
+    color: #555;
+  }
+  
+  .noResults {
+    color: #999;
+    font-size: 16px;
+    text-align: center;
+    margin-top: 20px;
+  }
+  

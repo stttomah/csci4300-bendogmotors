@@ -1,0 +1,61 @@
+.pageContainer {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: #f5f5f5;
+  }
+  
+  .content {
+    display: flex;
+    flex: 1;
+    gap: 20px; 
+    padding: 20px;
+  }
+  
+  .leftSection {
+    flex: 1;
+    max-width: 40%; 
+    background-color: #ff9933; 
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .rightSection {
+    flex: 2;
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .carItem {
+    margin-bottom: 15px;
+    padding: 10px;
+    background-color: #ffe5cc; 
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .carItem p {
+    margin: 5px 0;
+  }
+  
+  .noResults {
+    text-align: center;
+    padding: 20px;
+    font-size: 16px;
+    color: #555;
+  }
+  
+  @media (max-width: 768px) {
+    .content {
+      flex-direction: column;
+    }
+  
+    .leftSection,
+    .rightSection {
+      max-width: 100%;
+    }
+  }
+  
