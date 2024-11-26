@@ -3,6 +3,8 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from './CreateAccount.module.css';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const CreateAccount: React.FC = () => {
   const router = useRouter();
@@ -12,19 +14,18 @@ const CreateAccount: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     // Validation
     if (!firstName || !lastName || !email || !password || !confirmPassword) {
-      setError('Please fill in all required fields.');
+      toast.error('Please fill in all required fields.');
       return;
     }
 
     if (password !== confirmPassword) {
-      setError('Passwords do not match.');
+      toast.error('Passwords do not match.');
       return;
     }
 
@@ -42,16 +43,17 @@ const CreateAccount: React.FC = () => {
       if (response.ok) {
         const result = await response.json();
         console.log('Account creation successful:', result.message);
+        toast.success('Account created successfully!', { autoClose: false });
         clearForm();
-        router.push('/authenticated'); // Redirect on success
+        setTimeout(() => router.push('/authenticated'), 2000); // Redirect after 2 seconds
       } else {
         const errorData = await response.json();
-        setError(errorData.message || 'Failed to create account.');
+        toast.error(errorData.message || 'Failed to create account.');
         console.error('Failed to create account:', errorData);
       }
     } catch (error) {
       console.error('Error creating account:', error);
-      setError('An unexpected error occurred. Please try again.');
+      toast.error('An unexpected error occurred. Please try again.');
     }
   };
 
@@ -61,7 +63,6 @@ const CreateAccount: React.FC = () => {
     setEmail('');
     setPassword('');
     setConfirmPassword('');
-    setError('');
   };
 
   return (
@@ -71,8 +72,6 @@ const CreateAccount: React.FC = () => {
       </header>
 
       <form className={styles.form} onSubmit={handleSubmit}>
-        {error && <p className={styles.error}>{error}</p>}
-
         <label>First Name</label>
         <input
           type="text"
@@ -128,6 +127,19 @@ const CreateAccount: React.FC = () => {
       </form>
 
       <footer className={styles.footer}>© 2024 Bendog Motors</footer>
+
+      {/* Toast notifications */}
+      <ToastContainer
+        position="top-right"
+        hideProgressBar={false}
+        newestOnTop={true}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </div>
   );
 };
