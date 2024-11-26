@@ -16,7 +16,7 @@ const filterOptions = [
     label: 'Features',
     options: [
       'Navigation',
-      'Sunroof',
+      'Alloy wheels',
       'Heated Seats',
       'Backup Camera',
       'Bluetooth',
@@ -43,7 +43,7 @@ const filterOptions = [
   },
   {
     label: 'Year',
-    options: ['2024', '2023', '2022', '2021', '2020', '2019', '2018', '2017', '2016'],
+    options: ['2024', '2023', '2022', '2021', '2020', '2019', '2018', '2017', '2016', '2015'],
   },
 ];
 
