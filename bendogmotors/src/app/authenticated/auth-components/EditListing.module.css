@@ -1,0 +1,97 @@
+.editListingContainer {
+    font-family: Arial, sans-serif;
+    color: #333;
+    background-color: #ffa726; 
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 800px; 
+    margin: 40px 0 40px auto; 
+    position: relative; 
+  }
+  
+  .editListingContainer h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  .editListingContainer form {
+    display: flex;
+    flex-wrap: wrap; 
+    gap: 20px; 
+  }
+  
+  .fieldContainer {
+    flex: 1 1 calc(50% - 20px); 
+    min-width: 300px; 
+  }
+  
+  .fieldContainer label {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    display: block;
+  }
+  
+  .fieldContainer input,
+  .fieldContainer textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    color: #333;
+  }
+  
+  .fieldContainer textarea {
+    resize: vertical;
+    min-height: 100px;
+  }
+  
+  .input:focus,
+  .textarea:focus {
+    border-color: #fb8c00;
+    outline: none;
+  }
+  
+  .editListingContainer .formActions {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    width: 100%; 
+  }
+  
+  .saveButton,
+  .cancelButton {
+    padding: 12px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.3s ease;
+  }
+  
+  .saveButton {
+    background-color: #4caf50; 
+    color: white;
+  }
+  
+  .saveButton:hover {
+    background-color: #45a049;
+  }
+  
+  .cancelButton {
+    background-color: #e53935; 
+    color: white;
+  }
+  
+  .cancelButton:hover {
+    background-color: #d32f2f;
+  }
+  

@@ -73,5 +73,37 @@
     margin-top: 5px;
 }
 
-
-
+.dropdown {
+    position: relative;
+  }
+  
+  .dropdown button {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+  }
+  
+  .dropdownMenu {
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background-color: white;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+  }
+  
+  .dropdownMenu button {
+    display: block;
+    width: 100%;
+    padding: 8px 16px;
+    text-align: left;
+    border: none;
+    background: none;
+    cursor: pointer;
+  }
+  
+  .dropdownMenu button:hover {
+    background-color: #f0f0f0;
+  }

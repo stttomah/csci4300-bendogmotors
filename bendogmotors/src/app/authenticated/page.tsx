@@ -7,6 +7,7 @@ import Sidebar from "./auth-components/Sidebar";
 import Listing from "./auth-components/Listing";
 import Footer from "./auth-components/Footer";
 import PageNavigation from "./auth-components/PageNavigation";
+import EditListing from "./auth-components/EditListing";
 
 interface Listing {
   id: string;
@@ -33,6 +34,7 @@ const AuthenticatedView: React.FC = () => {
   const [filteredListings, setFilteredListings] = useState<Listing[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [filters, setFilters] = useState<Record<string, string>>({});
+  const [editingItemId, setEditingItemId] = useState<string | null>(null); // Track if editing
 
   // Fetch Listings
   useEffect(() => {
@@ -40,12 +42,6 @@ const AuthenticatedView: React.FC = () => {
       try {
         const response = await fetch("/api/items");
         const data = await response.json();
-
-        if (!Array.isArray(data.items)) {
-          console.error("Unexpected data format or empty response:", data);
-          setListings([]);
-          return;
-        }
 
         const transformedListings = data.items.map((item: any) => ({
           id: item._id,
@@ -78,86 +74,29 @@ const AuthenticatedView: React.FC = () => {
     fetchListings();
   }, []);
 
-  useEffect(() => {
-    let filtered = listings;
-
-    Object.entries(filters).forEach(([category, value]) => {
-      if (value) {
-        if (category === "Price Range") {
-          if (value === "Under $50,000") {
-            filtered = filtered.filter((listing) => listing.price < 50000);
-          } else if (value === "$50,000 - $100,000") {
-            filtered = filtered.filter(
-              (listing) => listing.price >= 50000 && listing.price <= 100000
-            );
-          } else if (value === "$100,000 - $200,000") {
-            filtered = filtered.filter(
-              (listing) => listing.price > 100000 && listing.price <= 200000
-            );
-          } else if (value === "Over $200,000") {
-            filtered = filtered.filter((listing) => listing.price > 200000);
-          }
-        } else if (category === "Interior Color") {
-          filtered = filtered.filter(
-            (listing) =>
-              listing.interiorColor?.toLowerCase() === value?.toLowerCase()
-          );
-        } else if (category === "Exterior Color") {
-          filtered = filtered.filter(
-            (listing) =>
-              listing.exteriorColor?.toLowerCase() === value?.toLowerCase()
-          );
-        } else if (category === "MPG") {
-          const mpgRange = value.match(/(\d+)-(\d+)/);
-          if (mpgRange) {
-            const [_, min, max] = mpgRange.map(Number);
-            filtered = filtered.filter(
-              (listing) => listing.mpg >= min && listing.mpg <= max
-            );
-          } else if (value === "30+ MPG") {
-            filtered = filtered.filter((listing) => listing.mpg > 30);
-          }
-        } else if (category === "Fuel Type") {
-          filtered = filtered.filter(
-            (listing) =>
-              listing.fuel?.toLowerCase() === value?.toLowerCase()
-          );
-        } else if (category === "Features") {
-          filtered = filtered.filter((listing) =>
-            listing.features?.some((feature) =>
-              feature.toLowerCase().includes(value.toLowerCase())
-            )
-          );
-        } else if (category === "Year") {
-          filtered = filtered.filter(
-            (listing) => listing.year.toString() === value
-          );
-        } else if (category === "Make") {
-          filtered = filtered.filter(
-            (listing) =>
-              listing.makeModel?.toLowerCase().includes(value?.toLowerCase())
-          );
-        }
-      }
-    });
-
-    if (searchQuery.trim() !== "") {
-      filtered = filtered.filter((listing) =>
-        listing.title.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-    }
-
-    setFilteredListings(filtered);
-  }, [filters, searchQuery, listings]);
-
-  // Reset Filters
-  const resetFilters = () => {
-    setFilters({});
-    setFilteredListings(listings); // Reset to show all listings
+  const handleEdit = (id: string) => {
+    setEditingItemId(id); // Set the ID of the listing being edited
   };
 
-  const handleFilterChange = (updatedFilters: Record<string, string>) => {
-    setFilters(updatedFilters);
+  const handleDelete = async (id: string) => {
+    try {
+      const response = await fetch(`/api/items/${id}`, { method: "DELETE" });
+      if (response.ok) {
+        setListings((prevItems) => prevItems.filter((item) => item.id !== id));
+        setFilteredListings((prevItems) =>
+          prevItems.filter((item) => item.id !== id)
+        );
+        console.log("Item deleted successfully");
+      } else {
+        console.error("Failed to delete item");
+      }
+    } catch (error) {
+      console.error("Error deleting item:", error);
+    }
+  };
+
+  const handleModalClose = () => {
+    setEditingItemId(null); 
   };
 
   return (
@@ -168,12 +107,25 @@ const AuthenticatedView: React.FC = () => {
       />
       <div className={styles.content}>
         <Sidebar
-          onFilterChange={handleFilterChange}
+          onFilterChange={(updatedFilters) => setFilters(updatedFilters)}
         />
         <main className={styles.listingsSection}>
-          {filteredListings.map((listing: Listing) => (
-            <Listing key={listing.id} listing={listing} />
-          ))}
+          {editingItemId ? (
+            // Show EditListing if editingItemId is set
+            <EditListing
+              itemId={editingItemId}
+              onClose={handleModalClose} 
+            />
+          ) : (
+            filteredListings.map((listing: Listing) => (
+              <Listing
+                key={listing.id}
+                listing={listing}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+              />
+            ))
+          )}
         </main>
       </div>
       <PageNavigation />
