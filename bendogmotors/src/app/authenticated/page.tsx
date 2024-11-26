@@ -34,7 +34,7 @@ const AuthenticatedView: React.FC = () => {
   const [filteredListings, setFilteredListings] = useState<Listing[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [filters, setFilters] = useState<Record<string, string>>({});
-  const [editingItemId, setEditingItemId] = useState<string | null>(null); // Track if editing
+  const [editingItemId, setEditingItemId] = useState<string | null>(null);
 
   // Fetch Listings
   useEffect(() => {
@@ -42,6 +42,12 @@ const AuthenticatedView: React.FC = () => {
       try {
         const response = await fetch("/api/items");
         const data = await response.json();
+
+        if (!Array.isArray(data.items)) {
+          console.error("Unexpected data format or empty response:", data);
+          setListings([]);
+          return;
+        }
 
         const transformedListings = data.items.map((item: any) => ({
           id: item._id,
@@ -74,64 +80,147 @@ const AuthenticatedView: React.FC = () => {
     fetchListings();
   }, []);
 
-  const handleEdit = (id: string) => {
-    setEditingItemId(id); // Set the ID of the listing being edited
-  };
+  useEffect(() => {
+    let filtered = listings;
 
-  const handleDelete = async (id: string) => {
-    try {
-      const response = await fetch(`/api/items/${id}`, { method: "DELETE" });
-      if (response.ok) {
-        setListings((prevItems) => prevItems.filter((item) => item.id !== id));
-        setFilteredListings((prevItems) =>
-          prevItems.filter((item) => item.id !== id)
-        );
-        console.log("Item deleted successfully");
-      } else {
-        console.error("Failed to delete item");
+    Object.entries(filters).forEach(([category, value]) => {
+      if (value) {
+        if (category === "Price Range") {
+          if (value === "Under $50,000") {
+            filtered = filtered.filter((listing) => listing.price < 50000);
+          } else if (value === "$50,000 - $100,000") {
+            filtered = filtered.filter(
+              (listing) => listing.price >= 50000 && listing.price <= 100000
+            );
+          } else if (value === "$100,000 - $200,000") {
+            filtered = filtered.filter(
+              (listing) => listing.price > 100000 && listing.price <= 200000
+            );
+          } else if (value === "Over $200,000") {
+            filtered = filtered.filter((listing) => listing.price > 200000);
+          }
+        } else if (category === "Interior Color") {
+          filtered = filtered.filter(
+            (listing) =>
+              listing.interiorColor?.toLowerCase() === value?.toLowerCase()
+          );
+        } else if (category === "Exterior Color") {
+          filtered = filtered.filter(
+            (listing) =>
+              listing.exteriorColor?.toLowerCase() === value?.toLowerCase()
+          );
+        } else if (category === "MPG") {
+          const mpgRange = value.match(/(\d+)-(\d+)/);
+          if (mpgRange) {
+            const [_, min, max] = mpgRange.map(Number);
+            filtered = filtered.filter(
+              (listing) => listing.mpg >= min && listing.mpg <= max
+            );
+          } else if (value === "30+ MPG") {
+            filtered = filtered.filter((listing) => listing.mpg > 30);
+          }
+        } else if (category === "Fuel Type") {
+          filtered = filtered.filter(
+            (listing) =>
+              listing.fuel?.toLowerCase() === value?.toLowerCase()
+          );
+        } else if (category === "Features") {
+          filtered = filtered.filter((listing) =>
+            listing.features?.some((feature) =>
+              feature.toLowerCase().includes(value.toLowerCase())
+            )
+          );
+        } else if (category === "Year") {
+          filtered = filtered.filter(
+            (listing) => listing.year.toString() === value
+          );
+        } else if (category === "Make") {
+          filtered = filtered.filter(
+            (listing) =>
+              listing.makeModel?.toLowerCase().includes(value?.toLowerCase())
+          );
+        }
       }
-    } catch (error) {
-      console.error("Error deleting item:", error);
+    });
+
+    if (searchQuery.trim() !== "") {
+      filtered = filtered.filter((listing) =>
+        listing.title.toLowerCase().includes(searchQuery.toLowerCase())
+      );
     }
+
+    setFilteredListings(filtered);
+  }, [filters, searchQuery, listings]);
+
+  // Reset Filters
+  const resetFilters = () => {
+    setFilters({});
+    setFilteredListings(listings); // Reset to show all listings
   };
 
-  const handleModalClose = () => {
-    setEditingItemId(null); 
+  const handleFilterChange = (updatedFilters: Record<string, string>) => {
+    setFilters(updatedFilters);
   };
 
-  return (
-    <div className={styles.container}>
-      <Header
-        onLogout={() => console.log("Logged out")}
-        onSearch={(query) => setSearchQuery(query)}
+// edit handler
+const handleEdit = (id: string) => {
+  setEditingItemId(id); // Set the ID of the listing being edited
+};
+
+const handleDelete = async (id: string) => {
+  try {
+    const response = await fetch(`/api/items/${id}`, { method: "DELETE" });
+    if (response.ok) {
+      setListings((prevItems) => prevItems.filter((item) => item.id !== id));
+      setFilteredListings((prevItems) =>
+        prevItems.filter((item) => item.id !== id)
+      );
+      console.log("Item deleted successfully");
+    } else {
+      console.error("Failed to delete item");
+    }
+  } catch (error) {
+    console.error("Error deleting item:", error);
+  }
+};
+
+const handleModalClose = () => {
+  setEditingItemId(null); 
+};
+
+return (
+  <div className={styles.container}>
+    <Header
+      onLogout={() => console.log("Logged out")}
+      onSearch={(query) => setSearchQuery(query)}
+    />
+    <div className={styles.content}>
+      <Sidebar
+        onFilterChange={(updatedFilters) => setFilters(updatedFilters)}
       />
-      <div className={styles.content}>
-        <Sidebar
-          onFilterChange={(updatedFilters) => setFilters(updatedFilters)}
-        />
-        <main className={styles.listingsSection}>
-          {editingItemId ? (
-            // Show EditListing if editingItemId is set
-            <EditListing
-              itemId={editingItemId}
-              onClose={handleModalClose} 
+      <main className={styles.listingsSection}>
+        {editingItemId ? (
+          // Show EditListing if editingItemId is set
+          <EditListing
+            itemId={editingItemId}
+            onClose={handleModalClose} 
+          />
+        ) : (
+          filteredListings.map((listing: Listing) => (
+            <Listing
+              key={listing.id}
+              listing={listing}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
             />
-          ) : (
-            filteredListings.map((listing: Listing) => (
-              <Listing
-                key={listing.id}
-                listing={listing}
-                onEdit={handleEdit}
-                onDelete={handleDelete}
-              />
-            ))
-          )}
-        </main>
-      </div>
-      <PageNavigation />
-      <Footer />
+          ))
+        )}
+      </main>
     </div>
-  );
+    <PageNavigation />
+    <Footer />
+  </div>
+);
 };
 
 export default AuthenticatedView;
