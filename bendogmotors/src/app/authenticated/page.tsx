@@ -80,7 +80,7 @@ const AuthenticatedView: React.FC = () => {
 
   useEffect(() => {
     let filtered = listings;
-  
+
     Object.entries(filters).forEach(([category, value]) => {
       if (value) {
         if (category === "Price Range") {
@@ -140,16 +140,21 @@ const AuthenticatedView: React.FC = () => {
         }
       }
     });
-  
+
     if (searchQuery.trim() !== "") {
       filtered = filtered.filter((listing) =>
         listing.title.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
-  
+
     setFilteredListings(filtered);
   }, [filters, searchQuery, listings]);
-   
+
+  // Reset Filters
+  const resetFilters = () => {
+    setFilters({});
+    setFilteredListings(listings); // Reset to show all listings
+  };
 
   const handleFilterChange = (updatedFilters: Record<string, string>) => {
     setFilters(updatedFilters);
@@ -162,7 +167,9 @@ const AuthenticatedView: React.FC = () => {
         onSearch={(query) => setSearchQuery(query)}
       />
       <div className={styles.content}>
-        <Sidebar onFilterChange={handleFilterChange} />
+        <Sidebar
+          onFilterChange={handleFilterChange}
+        />
         <main className={styles.listingsSection}>
           {filteredListings.map((listing: Listing) => (
             <Listing key={listing.id} listing={listing} />

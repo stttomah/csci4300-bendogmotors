@@ -47,13 +47,20 @@ const filterOptions = [
   },
 ];
 
-const Sidebar: React.FC<{ onFilterChange: (filters: Record<string, string>) => void }> = ({ onFilterChange }) => {
+const Sidebar: React.FC<{
+  onFilterChange: (filters: Record<string, string>) => void;
+}> = ({ onFilterChange }) => {
   const [selectedFilters, setSelectedFilters] = React.useState<Record<string, string>>({});
 
   const handleChange = (category: string, value: string) => {
     const updatedFilters = { ...selectedFilters, [category]: value };
     setSelectedFilters(updatedFilters);
-    onFilterChange(updatedFilters); // Notify the parent about the changes
+    onFilterChange(updatedFilters); // Notify parent about changes
+  };
+
+  const handleReset = () => {
+    setSelectedFilters({}); // Clear the selected filters
+    onFilterChange({}); // Notify parent to reset filters
   };
 
   return (
@@ -74,6 +81,11 @@ const Sidebar: React.FC<{ onFilterChange: (filters: Record<string, string>) => v
             ))}
           </select>
         ))}
+      </div>
+      <div className={styles.resetButtonContainer}>
+        <button onClick={handleReset} className={styles.resetButton}>
+          Reset Filters
+        </button>
       </div>
     </aside>
   );
