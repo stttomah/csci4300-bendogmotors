@@ -24,6 +24,7 @@ Steps to Run:
 - run "npx auth secret" in terminal
 - run "npm i bcryptjs" in terminal
 - run "npm install @fortawesome/fontawesome-free" in terminal
+- run "npm install react-toastify" in terminal
 - run "npm run dev" in terminal
 - load localhost:3000 in broswer of choice
   
