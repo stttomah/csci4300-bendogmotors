@@ -5,47 +5,50 @@ import { useRouter } from 'next/navigation';
 import styles from './LoginForm.module.css';
 import { signIn } from 'next-auth/react';
 import '@fortawesome/fontawesome-free/css/all.css';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const LoginForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setErrorMessage('');
     setIsLoading(true);
-  
+
     try {
       const response = await fetch(`/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }), // Send JSON body
+        body: JSON.stringify({ email, password }),
       });
-  
+
       if (response.ok) {
         const data = await response.json();
         console.log('Login successful:', data);
-        router.push('/authenticated'); // Redirect after successful login
+        toast.success('Login successful!', { autoClose: false });
+        setTimeout(() => router.push('/authenticated'), 2000); // Redirect after 2 seconds
       } else {
         const errorData = await response.json();
-        setErrorMessage(errorData.message || 'Login failed');
+        toast.error(errorData.message || 'Login failed');
       }
     } catch (error) {
       console.error('Error logging in:', error);
-      setErrorMessage('An unexpected error occurred');
+      toast.error('An unexpected error occurred');
     } finally {
       setIsLoading(false);
     }
-  };  
+  };
 
   const handleGoogleSignIn = async () => {
     try {
       await signIn('google', { callbackUrl: '/authenticated' });
+      toast.success('Google Sign-In successful!', { autoClose: false });
     } catch (error) {
       console.error('Google Sign-In failed:', error);
+      toast.error('Google Sign-In failed. Please try again.');
     }
   };
 
@@ -73,8 +76,6 @@ const LoginForm = () => {
 
         {/* Regular Login */}
         <form onSubmit={handleSubmit}>
-          {errorMessage && <p className={styles.error}>{errorMessage}</p>}
-
           <label htmlFor="email" className={styles.label}>Email</label>
           <input
             type="email"
@@ -105,6 +106,19 @@ const LoginForm = () => {
           Don't have an account?
         </p>
       </div>
+
+      {/* Toast notifications */}
+      <ToastContainer
+        position="top-right"
+        hideProgressBar={false}
+        newestOnTop={true}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </div>
   );
 };
