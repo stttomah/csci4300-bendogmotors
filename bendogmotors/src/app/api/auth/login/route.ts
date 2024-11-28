@@ -28,9 +28,6 @@ export async function POST(request: NextRequest) {
 
     // Compare the provided password with the hashed password (using synchronous technique)
     const isPasswordValid = await bcrypt.compare(password, user.password);
-    console.log("Provided Password:", password);
-    console.log("Stored Hashed Password:", user.password);
-    console.log("Password Match:", isPasswordValid);
 
     if (!isPasswordValid) {
       return NextResponse.json(

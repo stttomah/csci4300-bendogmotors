@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from './LoginForm.module.css';
-import { signIn } from 'next-auth/react';
 import '@fortawesome/fontawesome-free/css/all.css';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -42,16 +41,6 @@ const LoginForm = () => {
     }
   };
 
-  const handleGoogleSignIn = async () => {
-    try {
-      await signIn('google', { callbackUrl: '/authenticated' });
-      toast.success('Google Sign-In successful!', { autoClose: false });
-    } catch (error) {
-      console.error('Google Sign-In failed:', error);
-      toast.error('Google Sign-In failed. Please try again.');
-    }
-  };
-
   const handleSignUpRedirect = () => {
     router.push('/create-account');
   };
@@ -61,18 +50,6 @@ const LoginForm = () => {
       <div className={styles.loginBox}>
         <h2 className={styles.heading}>LOGIN</h2>
         <hr className={styles.separator} />
-
-        {/* Google Login */}
-        <button
-          type="button"
-          onClick={handleGoogleSignIn}
-          className={`${styles.googleButton}`}
-        >
-          <div className={styles.googleLogo}>
-            <img src="/images/google-icon.svg" alt="Google Logo" className={styles.logoImage} />
-          </div>
-          <span>Sign in with Google</span>
-        </button>
 
         {/* Regular Login */}
         <form onSubmit={handleSubmit}>
