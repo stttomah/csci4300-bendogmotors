@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import ProtectedRoutes from "../../utils/ProtectedRoutes";
 import styles from "./AuthenticatedView.module.css";
 import Header from "./auth-components/Header";
 import Sidebar from "./auth-components/Sidebar";
@@ -8,6 +9,7 @@ import Listing from "./auth-components/Listing";
 import Footer from "./auth-components/Footer";
 import PageNavigation from "./auth-components/PageNavigation";
 import EditListing from "./auth-components/EditListing";
+import Cookies from "js-cookie";
 
 interface Listing {
   id: string;
@@ -29,7 +31,7 @@ interface Listing {
   features: string[];
 }
 
-const AuthenticatedView: React.FC = () => {
+const AuthenticatedPage: React.FC = () => {
   const [listings, setListings] = useState<Listing[]>([]);
   const [filteredListings, setFilteredListings] = useState<Listing[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -66,7 +68,9 @@ const AuthenticatedView: React.FC = () => {
           fuel: item.fuel,
           year: item.year,
           makeModel: item.makeModel,
-          features: item.features ? item.features.split(",").map((f: string) => f.trim()) : [],
+          features: item.features
+            ? item.features.split(",").map((f: string) => f.trim())
+            : [],
         }));
 
         setListings(transformedListings);
@@ -80,65 +84,85 @@ const AuthenticatedView: React.FC = () => {
     fetchListings();
   }, []);
 
+  // filter listings
   useEffect(() => {
     let filtered = listings;
 
     Object.entries(filters).forEach(([category, value]) => {
       if (value) {
-        if (category === "Price Range") {
-          if (value === "Under $50,000") {
-            filtered = filtered.filter((listing) => listing.price < 50000);
-          } else if (value === "$50,000 - $100,000") {
+        switch (category) {
+          case "Price Range":
+            if (value === "Under $50,000") {
+              filtered = filtered.filter((listing) => listing.price < 50000);
+            } else if (value === "$50,000 - $100,000") {
+              filtered = filtered.filter(
+                (listing) => listing.price >= 50000 && listing.price <= 100000
+              );
+            } else if (value === "$100,000 - $200,000") {
+              filtered = filtered.filter(
+                (listing) => listing.price > 100000 && listing.price <= 200000
+              );
+            } else if (value === "Over $200,000") {
+              filtered = filtered.filter((listing) => listing.price > 200000);
+            }
+            break;
+
+          case "Interior Color":
             filtered = filtered.filter(
-              (listing) => listing.price >= 50000 && listing.price <= 100000
+              (listing) =>
+                listing.interiorColor?.toLowerCase() === value?.toLowerCase()
             );
-          } else if (value === "$100,000 - $200,000") {
+            break;
+
+          case "Exterior Color":
             filtered = filtered.filter(
-              (listing) => listing.price > 100000 && listing.price <= 200000
+              (listing) =>
+                listing.exteriorColor?.toLowerCase() === value?.toLowerCase()
             );
-          } else if (value === "Over $200,000") {
-            filtered = filtered.filter((listing) => listing.price > 200000);
-          }
-        } else if (category === "Interior Color") {
-          filtered = filtered.filter(
-            (listing) =>
-              listing.interiorColor?.toLowerCase() === value?.toLowerCase()
-          );
-        } else if (category === "Exterior Color") {
-          filtered = filtered.filter(
-            (listing) =>
-              listing.exteriorColor?.toLowerCase() === value?.toLowerCase()
-          );
-        } else if (category === "MPG") {
-          const mpgRange = value.match(/(\d+)-(\d+)/);
-          if (mpgRange) {
-            const [_, min, max] = mpgRange.map(Number);
+            break;
+
+          case "MPG":
+            const mpgRange = value.match(/(\d+)-(\d+)/);
+            if (mpgRange) {
+              const [_, min, max] = mpgRange.map(Number);
+              filtered = filtered.filter(
+                (listing) => listing.mpg >= min && listing.mpg <= max
+              );
+            } else if (value === "30+ MPG") {
+              filtered = filtered.filter((listing) => listing.mpg > 30);
+            }
+            break;
+
+          case "Fuel Type":
             filtered = filtered.filter(
-              (listing) => listing.mpg >= min && listing.mpg <= max
+              (listing) =>
+                listing.fuel?.toLowerCase() === value?.toLowerCase()
             );
-          } else if (value === "30+ MPG") {
-            filtered = filtered.filter((listing) => listing.mpg > 30);
-          }
-        } else if (category === "Fuel Type") {
-          filtered = filtered.filter(
-            (listing) =>
-              listing.fuel?.toLowerCase() === value?.toLowerCase()
-          );
-        } else if (category === "Features") {
-          filtered = filtered.filter((listing) =>
-            listing.features?.some((feature) =>
-              feature.toLowerCase().includes(value.toLowerCase())
-            )
-          );
-        } else if (category === "Year") {
-          filtered = filtered.filter(
-            (listing) => listing.year.toString() === value
-          );
-        } else if (category === "Make") {
-          filtered = filtered.filter(
-            (listing) =>
-              listing.makeModel?.toLowerCase().includes(value?.toLowerCase())
-          );
+            break;
+
+          case "Features":
+            filtered = filtered.filter((listing) =>
+              listing.features?.some((feature) =>
+                feature.toLowerCase().includes(value.toLowerCase())
+              )
+            );
+            break;
+
+          case "Year":
+            filtered = filtered.filter(
+              (listing) => listing.year.toString() === value
+            );
+            break;
+
+          case "Make":
+            filtered = filtered.filter(
+              (listing) =>
+                listing.makeModel?.toLowerCase().includes(value?.toLowerCase())
+            );
+            break;
+
+          default:
+            break;
         }
       }
     });
@@ -152,75 +176,73 @@ const AuthenticatedView: React.FC = () => {
     setFilteredListings(filtered);
   }, [filters, searchQuery, listings]);
 
-  // Reset Filters
+  // handlers
   const resetFilters = () => {
     setFilters({});
-    setFilteredListings(listings); // Reset to show all listings
+    setFilteredListings(listings);
   };
 
   const handleFilterChange = (updatedFilters: Record<string, string>) => {
     setFilters(updatedFilters);
   };
 
-// edit handler
-const handleEdit = (id: string) => {
-  setEditingItemId(id); // Set the ID of the listing being edited
-};
+  const handleEdit = (id: string) => {
+    setEditingItemId(id);
+  };
 
-const handleDelete = async (id: string) => {
-  try {
-    const response = await fetch(`/api/items/${id}`, { method: "DELETE" });
-    if (response.ok) {
-      setListings((prevItems) => prevItems.filter((item) => item.id !== id));
-      setFilteredListings((prevItems) =>
-        prevItems.filter((item) => item.id !== id)
-      );
-      console.log("Item deleted successfully");
-    } else {
-      console.error("Failed to delete item");
+  const handleDelete = async (id: string) => {
+    try {
+      const response = await fetch(`/api/items/${id}`, { method: "DELETE" });
+      if (response.ok) {
+        setListings((prevItems) => prevItems.filter((item) => item.id !== id));
+        setFilteredListings((prevItems) =>
+          prevItems.filter((item) => item.id !== id)
+        );
+        console.log("Item deleted successfully");
+      } else {
+        console.error("Failed to delete item");
+      }
+    } catch (error) {
+      console.error("Error deleting item:", error);
     }
-  } catch (error) {
-    console.error("Error deleting item:", error);
-  }
+  };
+
+  const handleModalClose = () => {
+    setEditingItemId(null);
+  };
+
+  return (
+    <ProtectedRoutes>
+      <div className={styles.container}>
+        <Header
+          onLogout={() => {
+            Cookies.remove("authToken");
+            location.reload();
+          }}
+          onSearch={(query) => setSearchQuery(query)}
+        />
+        <div className={styles.content}>
+          <Sidebar onFilterChange={handleFilterChange} />
+          <main className={styles.listingsSection}>
+            {editingItemId ? (
+              <EditListing itemId={editingItemId} onClose={handleModalClose} />
+            ) : (
+              filteredListings.map((listing: Listing) => (
+                <Listing
+                  key={listing.id}
+                  listing={listing}
+                  onEdit={handleEdit}
+                  onDelete={handleDelete}
+                />
+              ))
+            )}
+          </main>
+        </div>
+        <PageNavigation />
+        <Footer />
+      </div>
+    </ProtectedRoutes>
+  );
 };
 
-const handleModalClose = () => {
-  setEditingItemId(null); 
-};
-
-return (
-  <div className={styles.container}>
-    <Header
-      onLogout={() => console.log("Logged out")}
-      onSearch={(query) => setSearchQuery(query)}
-    />
-    <div className={styles.content}>
-      <Sidebar
-        onFilterChange={(updatedFilters) => setFilters(updatedFilters)}
-      />
-      <main className={styles.listingsSection}>
-        {editingItemId ? (
-          // Show EditListing if editingItemId is set
-          <EditListing
-            itemId={editingItemId}
-            onClose={handleModalClose} 
-          />
-        ) : (
-          filteredListings.map((listing: Listing) => (
-            <Listing
-              key={listing.id}
-              listing={listing}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-            />
-          ))
-        )}
-      </main>
-    </div>
-    <PageNavigation />
-    <Footer />
-  </div>
-);
-};
-
-export default AuthenticatedView;
+export default AuthenticatedPage;

@@ -6,6 +6,7 @@ import styles from './LoginForm.module.css';
 import '@fortawesome/fontawesome-free/css/all.css';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Cookies from 'js-cookie';
 
 const LoginForm = () => {
   const [email, setEmail] = useState('');
@@ -26,9 +27,15 @@ const LoginForm = () => {
 
       if (response.ok) {
         const data = await response.json();
+
+        // save token in cookies
+        Cookies.set('authToken', data.token, { expires: 7 }); // cookies expire in 7 days
+
         console.log('Login successful:', data);
-        toast.success('Login successful!', { autoClose: false });
-        setTimeout(() => router.push('/authenticated'), 2000); // Redirect after 2 seconds
+        toast.success('Login successful!', { autoClose: 2000 });
+
+        // redirect to authenticated
+        setTimeout(() => router.push('/authenticated'), 2000);
       } else {
         const errorData = await response.json();
         toast.error(errorData.message || 'Login failed');
@@ -51,9 +58,11 @@ const LoginForm = () => {
         <h2 className={styles.heading}>LOGIN</h2>
         <hr className={styles.separator} />
 
-        {/* Regular Login */}
+        {/* Login */}
         <form onSubmit={handleSubmit}>
-          <label htmlFor="email" className={styles.label}>Email</label>
+          <label htmlFor="email" className={styles.label}>
+            Email
+          </label>
           <input
             type="email"
             id="email"
@@ -64,7 +73,9 @@ const LoginForm = () => {
             required
           />
 
-          <label htmlFor="password" className={styles.label}>Password</label>
+          <label htmlFor="password" className={styles.label}>
+            Password
+          </label>
           <input
             type="password"
             id="password"
@@ -84,7 +95,7 @@ const LoginForm = () => {
         </p>
       </div>
 
-      {/* Toast notifications */}
+      {/* Toast Alerts */}
       <ToastContainer
         position="top-right"
         hideProgressBar={false}

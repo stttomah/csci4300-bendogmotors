@@ -6,6 +6,7 @@ import Footer from "../authenticated/auth-components/Footer";
 import CreateListing from "./CreateListing";
 import CarInfoForm from "./CarInfoForm";
 import CarInfoDisplay from "./CarInfoDisplay";
+import ProtectedRoutes from "../../utils/ProtectedRoutes";
 import styles from "./ListingPage.module.css";
 
 const CreateListingPage: React.FC = () => {
@@ -13,7 +14,7 @@ const CreateListingPage: React.FC = () => {
 
   const handleSearch = async (makeModel: string, year?: string) => {
     try {
-      const apiKey = "XDBEQ+m/GlVesvgSbfED8g==3MjIu1hWxUddaQWq"; 
+      const apiKey = "XDBEQ+m/GlVesvgSbfED8g==3MjIu1hWxUddaQWq";
       const [make, model] = makeModel.split("/");
 
       const url = `https://api.api-ninjas.com/v1/cars?${make ? `make=${make}` : ""}${
@@ -37,19 +38,21 @@ const CreateListingPage: React.FC = () => {
   };
 
   return (
-    <div className={styles.pageContainer}>
-      <Header onLogout={() => console.log("Logged out")} />
-      <div className={styles.content}>
-        <div className={styles.leftSection}>
-          <CarInfoForm onSearch={handleSearch} />
-          <CarInfoDisplay carInfo={carInfo} />
+    <ProtectedRoutes>
+      <div className={styles.pageContainer}>
+        <Header onLogout={() => console.log("Logged out")} />
+        <div className={styles.content}>
+          <div className={styles.leftSection}>
+            <CarInfoForm onSearch={handleSearch} />
+            <CarInfoDisplay carInfo={carInfo} />
+          </div>
+          <div className={styles.rightSection}>
+            <CreateListing />
+          </div>
         </div>
-        <div className={styles.rightSection}>
-          <CreateListing />
-        </div>
+        <Footer />
       </div>
-      <Footer />
-    </div>
+    </ProtectedRoutes>
   );
 };
 

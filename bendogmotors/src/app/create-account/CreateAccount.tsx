@@ -18,7 +18,7 @@ const CreateAccount: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validation
+    // account validation
     if (!firstName || !lastName || !email || !password || !confirmPassword) {
       toast.error('Please fill in all required fields.');
       return;
@@ -34,7 +34,7 @@ const CreateAccount: React.FC = () => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          name: `${firstName} ${lastName}`, // Combine first and last name
+          name: `${firstName} ${lastName}`, // combine first and last
           email,
           password,
         }),
@@ -45,7 +45,7 @@ const CreateAccount: React.FC = () => {
         console.log('Account creation successful:', result.message);
         toast.success('Account created successfully!', { autoClose: false });
         clearForm();
-        setTimeout(() => router.push('/authenticated'), 2000); // Redirect after 2 seconds
+        setTimeout(() => router.push('/authenticated'), 2000); // redirect to authenticated page
       } else {
         const errorData = await response.json();
         toast.error(errorData.message || 'Failed to create account.');
@@ -128,7 +128,7 @@ const CreateAccount: React.FC = () => {
 
       <footer className={styles.footer}>© 2024 Bendog Motors</footer>
 
-      {/* Toast notifications */}
+      {/* Toast Alerts */}
       <ToastContainer
         position="top-right"
         hideProgressBar={false}

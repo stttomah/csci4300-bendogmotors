@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
 
     await connectMongoDB();
 
-    // Find the user by email
+    // find user by email
     const user = await User.findOne({ email: email.toLowerCase() });
 
     if (!user) {
@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Compare the provided password with the hashed password (using synchronous technique)
+    // compare password with hashed password
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {

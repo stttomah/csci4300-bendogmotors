@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
 
     await connectMongoDB();
 
-    // Check if the user already exists
+    // check if user exists
     const existingUser = await User.findOne({ email: email.toLowerCase() });
     if (existingUser) {
       return NextResponse.json(
@@ -25,16 +25,16 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Hash the password (using synchronous technique)
+    // has password
     const saltRounds = 10;
     const salt = bcrypt.genSaltSync(saltRounds);
     const hashedPassword = bcrypt.hashSync(password, salt);
 
-    // Create and store the new user
+    // create/store new user
     const newUser = await User.create({
       name,
-      email: email.toLowerCase(), // Normalize email
-      password: hashedPassword,   // Store hashed password
+      email: email.toLowerCase(), // normalize email
+      password: hashedPassword,   // store hashed password
     });
 
     return NextResponse.json(
