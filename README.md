@@ -25,6 +25,7 @@ Steps to Run:
 - run "npm i bcryptjs" in terminal
 - run "npm install @fortawesome/fontawesome-free" in terminal
 - run "npm install react-toastify" in terminal
+- run "npm install --save-dev @types/js-cookie" in terminal
 - run "npm run dev" in terminal
 - load localhost:3000 in broswer of choice
   
