@@ -15,7 +15,7 @@ const UserSchema = new mongoose.Schema(
       }
     },
     password: { type: String, required: true },
-    image: { type: String, default: "https://example.com/default-user-image.jpg" },
+    image: { type: String, default: "https://static.wikia.nocookie.net/outfit7talkingfriends/images/8/80/Talking_Ben_the_Dog_Original_HD_Icon.png/revision/latest/scale-to-width/360?cb=20231224180925" },
     role: { 
       type: String, 
       enum: ["user", "admin", "moderator"], 
