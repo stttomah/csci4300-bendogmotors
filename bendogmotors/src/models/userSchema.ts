@@ -9,7 +9,7 @@ const UserSchema = new mongoose.Schema(
       unique: true, 
       validate: {
         validator: function (v: string) {
-          return /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v); // Regex for email
+          return /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v); // email regex
         },
         message: (props: { value: string }) => `${props.value} is not a valid email address!`
       }
@@ -22,7 +22,7 @@ const UserSchema = new mongoose.Schema(
       default: "user" 
     },
   },
-  { timestamps: true, collection: "users" } // Explicitly set collection name
+  { timestamps: true, collection: "users" } // collection name and date joined
 );
 
 export default mongoose.models.User || mongoose.model("User", UserSchema);
