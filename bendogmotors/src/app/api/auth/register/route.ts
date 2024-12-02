@@ -5,7 +5,7 @@ import bcrypt from "bcrypt";
 
 export async function POST(request: NextRequest) {
   try {
-    const { name, email, password } = await request.json();
+    const { name, email, password, image } = await request.json(); // Include image in the request body
 
     if (!name || !email || !password) {
       return NextResponse.json(
@@ -25,20 +25,24 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // has password
+    // hash the password
     const saltRounds = 10;
     const salt = bcrypt.genSaltSync(saltRounds);
     const hashedPassword = bcrypt.hashSync(password, salt);
 
-    // create/store new user
+    // create/store a new user
     const newUser = await User.create({
       name,
       email: email.toLowerCase(), // normalize email
       password: hashedPassword,   // store hashed password
+      image: image || undefined,  // use provided/default image
     });
 
     return NextResponse.json(
-      { message: "User registered successfully", user: { email: newUser.email, name: newUser.name } },
+      { 
+        message: "User registered successfully", 
+        user: { email: newUser.email, name: newUser.name, image: newUser.image } 
+      },
       { status: 201 }
     );
   } catch (error) {

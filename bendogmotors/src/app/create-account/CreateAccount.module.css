@@ -87,3 +87,17 @@
     color: #999;
     font-size: 14px;
 }
+
+.imagePreview {
+    margin-top: 1rem;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+  
+.previewImage {
+    border-radius: 50%;
+    width: 105px; 
+    height: 105px;
+}  
