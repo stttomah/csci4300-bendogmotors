@@ -101,3 +101,13 @@
     width: 105px; 
     height: 105px;
 }  
+
+.previewButton {
+    background-color: #333;
+    color: #e0e0e0;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 20px;
+    font-weight: bold;
+    cursor: pointer;
+}
